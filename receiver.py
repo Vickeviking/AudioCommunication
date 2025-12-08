@@ -40,7 +40,6 @@ def main():
     yr = yr[:, 0]           # Remove second channel
 
     # ============ TILLAGD KOD ============
-    fs = 1.0 / dt
 
     #Bandpass runt 1725–1875 Hz
     fl = wcs._channels[0, channel_id] # 1725 Hz
@@ -60,7 +59,8 @@ def main():
 
     # Vi får skräp +- 3600 Hz, tas bort med lowpass filter 
     #Lowpass till baseband
-    f_lp = 100.0  # Hz, > bit rate (25 Hz) men << fc
+    f_lp = 100.0  # Hz, > bit rate (25 Hz) men << fc 
+    #TODO: öka? 
     b_lp, a_lp = signal.butter(4, f_lp/nyq, btype="low")
     yI_b = signal.lfilter(b_lp, a_lp, yI_d)
     yQ_b = signal.lfilter(b_lp, a_lp, yQ_d)

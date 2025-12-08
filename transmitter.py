@@ -20,7 +20,7 @@ import sounddevice as sd
 
 import wcslib as wcs
 
-from parameters import Tb, Ac, dt, fc
+from parameters import Tb, Ac, dt, fc, fs
 
 
 
@@ -58,7 +58,6 @@ def main():
     # === TILLAGD KOD ====
 
     # Encode baseband signal
-    fs = 1.0 / dt
     xb = wcs.encode_baseband_signal(bs, Tb, fs)
     n = np.arange(len(xb))
     t = n * dt
