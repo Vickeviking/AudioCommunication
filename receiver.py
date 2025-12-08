@@ -15,7 +15,7 @@ import sounddevice as sd
 import wcslib as wcs
 
 # TODO: Add relevant parameters to parameters.py
-from parameters import Tb, dt, fc, channel_id
+from parameters import Tb, dt, fc, channel_id, fs
 
 def main():
     parser = argparse.ArgumentParser(
@@ -71,7 +71,7 @@ def main():
     #======================================
 
    
-    br = wcs.decode_baseband_signal(yb, Tb, 1/dt)
+    br = wcs.decode_baseband_signal(yb, Tb, fs)
     data_rx = wcs.decode_string(br)
     print(f'Received: {data_rx} (no of bits: {len(br)}).')
 
