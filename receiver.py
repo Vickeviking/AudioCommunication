@@ -69,11 +69,13 @@ def main():
 
     # Check signal strength before decoding
     signal_amplitude = np.max(np.abs(yb))
-    if signal_amplitude < 0.1:
-        print(f'No signal detected (amplitude {signal_amplitude:.4f} too weak).')
+    amplitude_threshold = 0.009  # ~6x above typical noise level
+    if signal_amplitude < amplitude_threshold:
+        print(f'No signal detected (amplitude {signal_amplitude:.4f} < threshold {amplitude_threshold}).')
         br = np.array([], dtype=int)
         data_rx = ""
     else:
+        print(f'Signal detected (amplitude {signal_amplitude:.4f}).')
         br = wcs.decode_baseband_signal(yb, Tb, fs)
         data_rx = wcs.decode_string(br)
     
