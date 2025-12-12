@@ -38,7 +38,7 @@ def main():
 
     # Receive signal
     print(f'Receiving for {T} s.')
-    yr = sd.rec(int(T/dt), samplerate=1/dt, channels=1, blocking=True)
+    yr = sd.rec(int(T*fs), samplerate=fs, channels=1, blocking=True)
     yr = yr[:, 0]           # Remove second channel
 
     # ============ TILLAGD KOD ============

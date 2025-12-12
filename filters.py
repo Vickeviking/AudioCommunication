@@ -54,7 +54,7 @@ def design_lowpass_filter(fs, ftype='butter'):
         Denominator coefficients
     """
     nyq = fs / 2.0
-    Wp_lp = 100.0 / nyq
+    Wp_lp = 150.0 / nyq
     Ws_lp = 3000.0 / nyq
     Rp_lp = 1.0
     Rs_lp = 40.0
