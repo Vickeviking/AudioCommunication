@@ -51,6 +51,10 @@ def main():
     else:
         bs = wcs.encode_string(data)
     
+    # Add trailing zeros (3 bytes = 24 bits) to ensure full message decoding
+    trailing_zeros = np.zeros(24, dtype=int)
+    bs = np.concatenate([bs, trailing_zeros])
+
     # Transmit signal
     print(f'Sending: {data} (no of bits: {len(bs)}; message duration: {np.round(len(bs)*Tb, 1)} s).')
 

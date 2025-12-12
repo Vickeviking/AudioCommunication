@@ -8,7 +8,7 @@ import numpy as np
 from scipy import signal
 import matplotlib.pyplot as plt
 
-def design_bandpass_filter(fs, ftype='cheby1'):
+def design_bandpass_filter(fs, ftype='ellip'):
     """
     Design bandpass filter for 1725-1875 Hz range
     
@@ -17,7 +17,7 @@ def design_bandpass_filter(fs, ftype='cheby1'):
     fs : float
         Sampling frequency in Hz
     ftype : str
-        Filter type (default: 'cheby1')
+        Filter type (default: 'ellip' - Elliptic for steep rolloff and flat passband)
     
     Returns
     -------
@@ -29,8 +29,8 @@ def design_bandpass_filter(fs, ftype='cheby1'):
     nyq = fs / 2.0
     Wp_bp = [1725/nyq, 1875/nyq]
     Ws_bp = [1650/nyq, 1950/nyq]
-    Rp_bp = 1.0
-    Rs_bp = 20.0
+    Rp_bp = 0.5   # Max passband ripple (dB) - tighter for flatter response
+    Rs_bp = 50.0  # Min stopband attenuation (dB)
     
     b, a = signal.iirdesign(Wp_bp, Ws_bp, Rp_bp, Rs_bp, ftype=ftype)
     return b, a
@@ -54,10 +54,10 @@ def design_lowpass_filter(fs, ftype='butter'):
         Denominator coefficients
     """
     nyq = fs / 2.0
-    Wp_lp = 150.0 / nyq
-    Ws_lp = 3000.0 / nyq
+    Wp_lp = 100.0 / nyq
+    Ws_lp = 400.0 / nyq
     Rp_lp = 1.0
-    Rs_lp = 30.0
+    Rs_lp = 20.0
     
     b, a = signal.iirdesign(Wp_lp, Ws_lp, Rp_lp, Rs_lp, ftype=ftype)
     return b, a
@@ -75,11 +75,14 @@ def plot_bandpass_filter(b_bp, a_bp, n_bp, fs):
     ax1.plot(w_bp, h_bp_mag_db, 'b', linewidth=2, label='Filter response')
     ax1.axvline(1725, color='r', linestyle='--', alpha=0.7, label='Passband: 1725-1875 Hz')
     ax1.axvline(1875, color='r', linestyle='--', alpha=0.7)
+    ax1.axvline(1650, color='orange', linestyle='--', alpha=0.5, label='Stopband edges')
+    ax1.axvline(1950, color='orange', linestyle='--', alpha=0.5)
+    ax1.axhline(-60, color='m', linestyle=':', alpha=0.5, label='Rs=-60 dB')
     ax1.set_title(f'Bandpass Filter Magnitude (Order={n_bp})')
     ax1.set_xlabel('Frequency (Hz)')
     ax1.set_ylabel('Magnitude (dB)')
     ax1.set_xlim(1400, 2200)
-    ax1.set_ylim(-80, 5)
+    ax1.set_ylim(-100, 5)
     ax1.grid(True, alpha=0.3)
     ax1.legend(loc='best')
     
@@ -108,7 +111,7 @@ def plot_lowpass_filter(b_lp, a_lp, n_lp, f_lp, fs):
     ax1.set_title(f'Lowpass Filter Magnitude (Order={n_lp})')
     ax1.set_xlabel('Frequency (Hz)')
     ax1.set_ylabel('Magnitude (dB)')
-    ax1.set_xlim(0, 500)
+    ax1.set_xlim(0, 4000)
     ax1.set_ylim(-100, 5)
     ax1.grid(True, alpha=0.3)
     ax1.legend(loc='best')
@@ -118,7 +121,7 @@ def plot_lowpass_filter(b_lp, a_lp, n_lp, f_lp, fs):
     ax2.set_title(f'Lowpass Filter Phase (Order={n_lp})')
     ax2.set_xlabel('Frequency (Hz)')
     ax2.set_ylabel('Phase (radians)')
-    ax2.set_xlim(0, 500)
+    ax2.set_xlim(0, 4000)
     ax2.grid(True, alpha=0.3)
     
     return fig
