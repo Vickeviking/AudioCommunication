@@ -62,14 +62,21 @@ def main():
     yI_b = signal.lfilter(b_lp, a_lp, yI_d)
     yQ_b = signal.lfilter(b_lp, a_lp, yQ_d)
     n_lp = len(a_lp) - 1  # Actual lowpass order for plotting
-    f_lp = 150.0  # For plotting reference
+    f_lp = 100.0  # For plotting reference
 
     # Complex baseband signal
     yb = yI_b + 1j*yQ_b
 
-   
-    br = wcs.decode_baseband_signal(yb, Tb, fs)
-    data_rx = wcs.decode_string(br)
+    # Check signal strength before decoding
+    signal_amplitude = np.max(np.abs(yb))
+    if signal_amplitude < 0.1:
+        print(f'No signal detected (amplitude {signal_amplitude:.4f} too weak).')
+        br = np.array([], dtype=int)
+        data_rx = ""
+    else:
+        br = wcs.decode_baseband_signal(yb, Tb, fs)
+        data_rx = wcs.decode_string(br)
+    
     print(f'Received: {data_rx} (no of bits: {len(br)}).')
 
     # Generate Bode plots

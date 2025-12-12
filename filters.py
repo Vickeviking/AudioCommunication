@@ -8,7 +8,7 @@ import numpy as np
 from scipy import signal
 import matplotlib.pyplot as plt
 
-def design_bandpass_filter(fs, ftype='ellip'):
+def design_bandpass_filter(fs, ftype='cheby1'):
     """
     Design bandpass filter for 1725-1875 Hz range
     
@@ -17,7 +17,7 @@ def design_bandpass_filter(fs, ftype='ellip'):
     fs : float
         Sampling frequency in Hz
     ftype : str
-        Filter type (default: 'ellip' - Elliptic for steep rolloff and flat passband)
+        Filter type (default: 'cheby1' - Chebyshev Type I for flat passband and linear phase)
     
     Returns
     -------
@@ -29,8 +29,8 @@ def design_bandpass_filter(fs, ftype='ellip'):
     nyq = fs / 2.0
     Wp_bp = [1725/nyq, 1875/nyq]
     Ws_bp = [1650/nyq, 1950/nyq]
-    Rp_bp = 0.5   # Max passband ripple (dB) - tighter for flatter response
-    Rs_bp = 50.0  # Min stopband attenuation (dB)
+    Rp_bp = 0.5   # Max passband ripple (dB)
+    Rs_bp = 40.0  # Min stopband attenuation (dB)
     
     b, a = signal.iirdesign(Wp_bp, Ws_bp, Rp_bp, Rs_bp, ftype=ftype)
     return b, a
@@ -55,9 +55,9 @@ def design_lowpass_filter(fs, ftype='butter'):
     """
     nyq = fs / 2.0
     Wp_lp = 100.0 / nyq
-    Ws_lp = 400.0 / nyq
+    Ws_lp = 3000.0 / nyq
     Rp_lp = 1.0
-    Rs_lp = 20.0
+    Rs_lp = 40.0
     
     b, a = signal.iirdesign(Wp_lp, Ws_lp, Rp_lp, Rs_lp, ftype=ftype)
     return b, a
