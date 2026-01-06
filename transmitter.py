@@ -53,7 +53,7 @@ def main():
         bs = wcs.encode_string(data)
     
     #trailing zeros (3 bytes = 24 bits) to ensure full message decoding
-    trailing_zeros = np.zeros(24, dtype=int)
+    trailing_zeros = np.zeros(48, dtype=int)
     bs = np.concatenate([bs, trailing_zeros])
 
     # Transmit signal
@@ -75,7 +75,7 @@ def main():
     # ====================
 
     # Ensure the signal is mono, then play through speakers
-    xt = np.stack((xt, np.zeros(xt.shape)), axis=1)
+    xt = np.stack((xt, xt), axis=1)
     sd.play(xt, fs, blocking=True)
 
 

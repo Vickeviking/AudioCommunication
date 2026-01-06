@@ -55,7 +55,7 @@ def design_lowpass_filter(fs, ftype='butter'):
     """
     nyq = fs / 2.0
     Wp_lp = 100.0 / nyq
-    Ws_lp = 300.0 / nyq
+    Ws_lp = 3000.0 / nyq  # Wide transition band to avoid singularities
     Rp_lp = 1.0
     Rs_lp = 40.0
     
