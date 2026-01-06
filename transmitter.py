@@ -19,6 +19,7 @@ from scipy import signal
 import sounddevice as sd
 
 import wcslib as wcs
+import filters
 
 from parameters import Tb, Ac, dt, fc, fs
 
@@ -58,7 +59,6 @@ def main():
     # Transmit signal
     print(f'Sending: {data} (no of bits: {len(bs)}; message duration: {np.round(len(bs)*Tb, 1)} s).')
 
-
     # === TILLAGD KOD ====
 
     # Encode baseband signal
@@ -67,9 +67,12 @@ def main():
     t = n * dt
     carrier = Ac * np.sin(2 * np.pi * fc * t)
     xt = xb * carrier
+    
+    # Apply bandpass filter to limit signal to channel bandwidth
+    b_bp, a_bp = filters.design_bandpass_filter(fs)
+    xt = signal.lfilter(b_bp, a_bp, xt)
 
     # ====================
-
 
     # Ensure the signal is mono, then play through speakers
     xt = np.stack((xt, np.zeros(xt.shape)), axis=1)
