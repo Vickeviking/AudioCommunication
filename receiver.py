@@ -69,7 +69,7 @@ def main():
 
     # Check signal strength before decoding
     signal_amplitude = np.max(np.abs(yb))
-    amplitude_threshold = 0
+    amplitude_threshold = 0.0001
     if signal_amplitude < amplitude_threshold:
         print(f'No signal detected (amplitude {signal_amplitude:.4f} < threshold {amplitude_threshold}).')
         br = np.array([], dtype=int)
